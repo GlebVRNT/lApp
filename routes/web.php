@@ -33,3 +33,8 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::get('/banner_menu', function () {
+    return Inertia::render('BannerMenu');
+})->name('banner_menu');
+
