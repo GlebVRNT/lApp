@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\BannerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,7 +29,25 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    
+    //Route::resource('banners', BannerController::class);
+    
+    
+    
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    
+   
+    
+
+    
+
+    Route::get('banners', [BannerController::class, 'index'])
+    ->name('banners');
+    
+    Route::get('banners/create', [BannerController::class, 'create'])
+    ->name('banners.create');
+
+    
 });
