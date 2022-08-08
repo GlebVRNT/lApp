@@ -23,31 +23,33 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
+ 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
     
-    //Route::resource('banners', BannerController::class);
+    Route::resource('banners', BannerController::class);
     
     
     
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    
-   
-    
-
-    
-
-    Route::get('banners', [BannerController::class, 'index'])
-    ->name('banners');
+     
+   Route::get('/banners', [BannerController::class, 'index'])
+    ->name('banners.index');
     
     Route::get('banners/create', [BannerController::class, 'create'])
     ->name('banners.create');
+
+    Route::post('/banners', [BannerController::class, 'store'])
+    ->name('banners.store');
+
+    Route::get('banners/{banner}/edit', [BannerController::class, 'edit'])
+    ->name('banners.edit');
+    
 
     
 });

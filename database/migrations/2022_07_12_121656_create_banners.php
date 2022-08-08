@@ -17,17 +17,12 @@ return new class extends Migration
             
             $table->id();
             $table->string('name');
-            $table->string('user_url');
+            $table->string('user_id');
             $table->string('target_url');
             $table->string('img_url');
             $table->float('cpm');
             $table->integer('views_limit');
-            $table->timestamps();
-
-
-            
-            
-            
+            $table->timestamps();   
         });
     }
 

@@ -53,7 +53,7 @@ const logout = () => {
                                     Dashboard
                                 </JetNavLink>
                                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <JetNavLink :href="route('banners')" :active="route().current('banners')">
+                                <JetNavLink :href="route('banners.index')" :active="route().current('banners.*')">
                                     Workplace
                                 </JetNavLink>
                             </div>

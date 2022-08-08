@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Auth;
+use Redirect;
 use Inertia\Inertia;
 use App\Models\Banner;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Illuminate\Support\Facades\Log;
 
 
 class BannerController extends Controller
@@ -20,7 +22,9 @@ class BannerController extends Controller
      */
     public function index()
     {
-        $banners = Banner::latest()->paginate(10);
+        $banners = Banner::orderBy('id')
+        ->paginate(10);
+        
 
         return Inertia::render('Banners/Index', ['banners' => $banners]);
         // return Inertia::render('Banners/index', [
@@ -57,21 +61,23 @@ class BannerController extends Controller
      * @param  Request  $request
      * @return JsonResponse
      */
-    public function store()
+    public function store(Request $request)
     {
-        Auth::user()->account->banners()->create(
-            Request::validate([
-                'name' => ['required', 'max:100'],
-                'user_id' => ['required', 'max:100'],
-                'target_url' => ['required', 'max:100'],
-                'img_url' => ['required', 'max:100'],
-                'cpm' => ['nullable', 'max:100'],
-                'views_limit' => ['nullable', 'max:10000'],
-            ])
-        );
-    
-
-        return Redirect::route('banners')->with('success', 'Banner created.' );
+        //Log::emergency($request);
+        
+        //Banner::create( 
+            Banner::create($request->all());
+    //     Request::validate([
+            
+    //      'name' => ['required'],
+    //      'user_id' => ['required'],
+    //      'target_url' => ['required'],
+    //      'img_url' => ['required'],
+    //      'cpm' => ['nullable'],
+    //      'views_limit' => ['nullable']
+    //  ])
+     //);
+        return Redirect::route('banners.index')->with('success', 'Banner created.' );
     }
 
     /**
@@ -82,7 +88,7 @@ class BannerController extends Controller
      */
     public function show(Banner $banner)
     {
-        return Inertia::render('Banners');
+        //return Inertia::render('Banners');
     }
 
     /**
@@ -101,7 +107,7 @@ class BannerController extends Controller
                 'img_url' => $banner->img_url,
                 'cpm' => $banner->cpm,
                 'views_limit' => $banner->views_limit,
-                'deleted_at' => $banner->deleted_at,
+                //'deleted_at' => $banner->deleted_at,
             ],
         ]);
     }
@@ -114,19 +120,21 @@ class BannerController extends Controller
      * @param  Banner  $banner
      * @return JsonResponse
      */
-    public function update(Banner $banner)
+    public function update(Request $request, $id)
     {
-        $banner->update(
-            Request::validate([
-                'name' => ['required', 'max:100'],
-                'user_id' => ['required', 'max:100'],
-                'target_url' => ['required', 'max:100'],
-                'img_url' => ['required', 'max:100'],
-                'cpm' => ['nullable', 'max:100'],
-                'views_limit' => ['nullable', 'max:10000'],
-            ])
-        );
-            return Redirect::back()->with('success', 'Banner updated.');
+        Banner::where('id', $id)->update($request->all());   
+        // $data = Request::validate([
+            //     'id' => ['required'],
+            //     'name' => ['required'],
+            //     'user_id' => ['required'],
+            //     'target_url' => ['required'],
+            //     'img_url' => ['required'],
+            //     'cpm' => ['nullable'],
+            //     'views_limit' => ['nullable'],
+            // ]);
+            // $banner->update($data);
+        
+            return Redirect::route('banners.index')->with('success', 'Banner updated.');
     }
 
     /**
@@ -138,7 +146,9 @@ class BannerController extends Controller
     public function destroy(Banner $banner)
     {
         $banner->delete();
+        
 
-        return Redirect::back()->with('success', 'Banner deleted.');
+        return Redirect::route('banners.index')->with('success', 'Banner deleted.');
     }
 }
+ 

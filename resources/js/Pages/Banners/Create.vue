@@ -1,50 +1,81 @@
 <template>
-    <!-- component -->
-    <div class="flex items-center justify-center p-12">
-    
-        <div class="mx-auto w-full max-w-[550px]">
-            <form action="/banners" method="GET">
-                <div class="mb-5">
-                    <label class="mb-3 block text-base font-medium text-[#07074D]">Name</label>
-                    <input placeholder="Name"
-                    class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                </div>
-                <div class="mb-5">
-                    <label class="mb-3 block text-base font-medium text-[#07074D]">User ID</label>
-                    <input placeholder="Your ID"
-                    class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                </div>
-                <div class="mb-5">
-                    <label class="mb-3 block text-base font-medium text-[#07074D]">Target URL</label>
-                    <input placeholder="Link"
-                    class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                </div>
-                <div class="mb-5">
-                    <label class="mb-3 block text-base font-medium text-[#07074D]">Img URL</label>
-                    <input placeholder="Image link"
-                    class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                </div>
-                <div class="mb-5">
-                    <label class="mb-3 block text-base font-medium text-[#07074D]">CPM</label>
-                    <input
-                    placeholder="'Cost per mile'"
-                    class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                </div>
-                <div class="mb-5">
-                    <label class="mb-3 block text-base font-medium text-[#07074D]">Views Limit</label>
-                    <input placeholder="Views limit"
-                    class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                    />
-                </div>
-                <div>
-                    <button class="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-base font-semibold text-white outline-none">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
+  <Head title="Create Banner"></Head>
+  <h1 class="mb-8 text-3xl font-bold">
+    <Link class="text-indigo-400 hover:text-indigo-600" href="/banners">Back to Banners</Link>
+
+
+  </h1>
+  <div class="mx-auto w-full max-w-[550px]">
+
+    <form @submit.prevent="submit">
+      <div class="mb-5">
+        <label class="mb-3 block text-base font-medium text-[#07074D]">Name</label>
+        <input placeholder="Name" type="text" v-model="form.name"
+          class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+      </div>
+      <div class="mb-5">
+        <label class="mb-3 block text-base font-medium text-[#07074D]">User ID</label>
+        <input placeholder="Your ID" type="text" v-model="form.user_id"
+          class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+      </div>
+      <div class="mb-5">
+        <label class="mb-3 block text-base font-medium text-[#07074D]">Target URL</label>
+        <input placeholder="Link" type="text" v-model="form.target_url"
+          class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+      </div>
+      <div class="mb-5">
+        <label class="mb-3 block text-base font-medium text-[#07074D]">Img URL</label>
+        <input placeholder="Image link" type="text" v-model="form.img_url"
+          class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+      </div>
+      <div class="mb-5">
+        <label class="mb-3 block text-base font-medium text-[#07074D]">CPM</label>
+        <input placeholder="'Cost per mile'" type="text" v-model="form.cpm"
+          class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+      </div>
+      <div class="mb-5">
+        <label class="mb-3 block text-base font-medium text-[#07074D]">Views Limit</label>
+        <input placeholder="Views limit" type="text" v-model="form.views_limit"
+          class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md" />
+      </div>
+
+      <div>
+        <button
+          class="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-base font-semibold text-white outline-none"
+          type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
 </template>
+
+<script>
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import { reactive } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
+
+export default {
+  components: {
+    Head,
+    Link,
+
+  },
+
+  setup() {
+    const form = reactive({
+      name: null,
+      user_id: null,
+      target_url: null,
+      img_url: null,
+      cpm: null,
+      views_limit: null,
+    })
+
+    function submit() {
+      Inertia.post('/banners', form)
+    }
+
+    return { form, submit }
+  }
+}
+</script>
