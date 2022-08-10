@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,18 +12,17 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('banners', function (Blueprint $table) {
-            
             $table->id();
+            $table->foreignIdFor(User::class)->constrained();
             $table->string('name');
-            $table->string('user_id');
             $table->string('target_url');
             $table->string('img_url');
-            $table->float('cpm');
-            $table->integer('views_limit');
-            $table->timestamps();   
+            $table->unsignedFloat('cpm');
+            $table->unsignedBigInteger('views_limit');
+            $table->timestamps();
         });
     }
 
@@ -31,8 +31,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('banners');
     }
-};   
+};
