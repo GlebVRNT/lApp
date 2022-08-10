@@ -1,31 +1,31 @@
 <script setup>
-import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-import { Head, Link } from '@inertiajs/inertia-vue3';
-import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
-import JetBanner from '@/Jetstream/Banner.vue';
-import JetDropdown from '@/Jetstream/Dropdown.vue';
-import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
-import JetNavLink from '@/Jetstream/NavLink.vue';
-import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+    import { ref } from 'vue';
+    import { Inertia } from '@inertiajs/inertia';
+    import { Head, Link } from '@inertiajs/inertia-vue3';
+    import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
+    import JetBanner from '@/Jetstream/Banner.vue';
+    import JetDropdown from '@/Jetstream/Dropdown.vue';
+    import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
+    import JetNavLink from '@/Jetstream/NavLink.vue';
+    import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
 
-defineProps({
-    title: String,
-});
-
-const showingNavigationDropdown = ref(false);
-
-const switchToTeam = (team) => {
-    Inertia.put(route('current-team.update'), {
-        team_id: team.id,
-    }, {
-        preserveState: false,
+    defineProps({
+        title: String,
     });
-};
 
-const logout = () => {
-    Inertia.post(route('logout'));
-};
+    const showingNavigationDropdown = ref(false);
+
+    const switchToTeam = (team) => {
+        Inertia.put(route('current-team.update'), {
+            team_id: team.id,
+        }, {
+            preserveState: false,
+        });
+    };
+
+    const logout = () => {
+        Inertia.post(route('logout'));
+    };
 </script>
 
 <template>
@@ -52,11 +52,9 @@ const logout = () => {
                                 <JetNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </JetNavLink>
-                                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <JetNavLink :href="route('banners.index')" :active="route().current('banners.*')">
-                                    Workplace
+                                    Banners
                                 </JetNavLink>
-                            </div>
                             </div>
                         </div>
 
@@ -215,6 +213,9 @@ const logout = () => {
                     <div class="pt-2 pb-3 space-y-1">
                         <JetResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
+                        </JetResponsiveNavLink>
+                        <JetResponsiveNavLink :href="route('banners.index')" :active="route().current('banners.*')">
+                            Banners
                         </JetResponsiveNavLink>
                     </div>
 
