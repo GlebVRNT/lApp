@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Banner;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BannerFactory extends Factory
@@ -19,15 +20,15 @@ class BannerFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'name' => $this->faker->name(),
-            'user_id' => $this->faker->name(),
-            'target_url' => $this->faker->name(),
-            'img_url' => $this->faker->name(),
-            'cpm' => 1,
-            'views_limit' => 2
+            'user_id' => User::factory(),
+            'target_url' => $this->faker->url(),
+            'img_url' => $this->faker->imageUrl(),
+            'cpm' => $this->faker->randomFloat(2, 0.01, 3),
+            'views_limit' => $this->faker->randomNumber(),
         ];
     }
 }
