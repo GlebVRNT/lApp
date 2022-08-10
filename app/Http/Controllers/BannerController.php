@@ -1,48 +1,41 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Auth;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Response;
 use Redirect;
 use Inertia\Inertia;
 use App\Models\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Illuminate\Support\Facades\Log;
-
 
 class BannerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function index()
     {
-        $banners = Banner::orderBy('id')
-        ->paginate(10);
-        
+        $banners = Auth::user()->banners()
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn (Banner $banner) => [
+                'id' => $banner->id,
+                'name' => $banner->name,
+                'user_id' => $banner->user_id,
+                'target_url' => $banner->target_url,
+                'img_url' => $banner->img_url,
+                'cpm' => $banner->cpm,
+                'views_limit' => $banner->views_limit,
+            ]);
+
 
         return Inertia::render('Banners/Index', ['banners' => $banners]);
-        // return Inertia::render('Banners/index', [
-        //     'banners' => Auth::user()->account->banners()
-        //         ->orderBy('name')
-        //         ->paginate(10)
-        //         ->withQueryString()
-        //         ->through(fn ($banner) => [
-        //             'id' => $banner->id,
-        //             'name' => $banner->name,
-        //             'user_id' => $organization->user_url,
-        //             'target_url' => $banner->target_url,
-        //             'img_url' => $banner->img_url,
-        //             'cpm' => $banner->cpm,
-        //             'views_limit' => $banner->views_limit,
-        //             'deleted_at' => $banner->deleted_at,
-        //         ]),
-        // ]);
     }
 
     /**
@@ -59,46 +52,36 @@ class BannerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
-     * @return JsonResponse
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
-        //Log::emergency($request);
-        
-        //Banner::create( 
-            Banner::create($request->all());
-    //     Request::validate([
-            
-    //      'name' => ['required'],
-    //      'user_id' => ['required'],
-    //      'target_url' => ['required'],
-    //      'img_url' => ['required'],
-    //      'cpm' => ['nullable'],
-    //      'views_limit' => ['nullable']
-    //  ])
-     //);
-        return Redirect::route('banners.index')->with('success', 'Banner created.' );
-    }
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'target_url' => ['required', 'string', 'url', 'max:255'],
+            'img_url' => ['required', 'string', 'url', 'max:255'],
+            'cpm' => ['required', 'numeric', 'gt:0'],
+            'views_limit' => ['required', 'numeric', 'gt:0'],
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  Banner  $post
-     * @return JsonResponse
-     */
-    public function show(Banner $banner)
-    {
-        //return Inertia::render('Banners');
+        Auth::user()->banners()->create($data);
+
+        return Redirect::route('banners.index')->with('success', 'Banner created.');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  Banner  $banner
-     * @return JsonResponse
+     * @return Response
      */
-    public function edit(Banner $banner) {
-        return Inertia::render('Banners/Edit',[
+    public function edit(Banner $banner)
+    {
+        if (!$banner->user()->is(Auth::user())) {
+            abort(SymfonyResponse::HTTP_FORBIDDEN);
+        }
+
+        return Inertia::render('Banners/Edit', [
             'banner' => [
                 'id' => $banner->id,
                 'name' => $banner->name,
@@ -107,48 +90,51 @@ class BannerController extends Controller
                 'img_url' => $banner->img_url,
                 'cpm' => $banner->cpm,
                 'views_limit' => $banner->views_limit,
-                //'deleted_at' => $banner->deleted_at,
             ],
         ]);
     }
-    
+
 
     /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
      * @param  Banner  $banner
-     * @return JsonResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Banner $banner)
     {
-        Banner::where('id', $id)->update($request->all());   
-        // $data = Request::validate([
-            //     'id' => ['required'],
-            //     'name' => ['required'],
-            //     'user_id' => ['required'],
-            //     'target_url' => ['required'],
-            //     'img_url' => ['required'],
-            //     'cpm' => ['nullable'],
-            //     'views_limit' => ['nullable'],
-            // ]);
-            // $banner->update($data);
-        
-            return Redirect::route('banners.index')->with('success', 'Banner updated.');
+        if (!$banner->user()->is(auth()->user())) {
+            abort(SymfonyResponse::HTTP_FORBIDDEN);
+        }
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'target_url' => ['required', 'string', 'url', 'max:255'],
+            'img_url' => ['required', 'string', 'url', 'max:255'],
+            'cpm' => ['required', 'numeric', 'gt:0'],
+            'views_limit' => ['required', 'numeric', 'gt:0'],
+        ]);
+
+        $banner->update($data);
+
+        return Redirect::route('banners.index')->with('success', 'Banner updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  Banner  $banner
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy(Banner $banner)
     {
+        if (!$banner->user()->is(Auth::user())) {
+            abort(SymfonyResponse::HTTP_FORBIDDEN);
+        }
+
         $banner->delete();
-        
 
         return Redirect::route('banners.index')->with('success', 'Banner deleted.');
     }
 }
- 
