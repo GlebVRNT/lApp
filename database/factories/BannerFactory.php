@@ -23,11 +23,11 @@ class BannerFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->title(),
             'user_id' => User::factory(),
             'target_url' => $this->faker->url(),
             'img_url' => $this->faker->imageUrl(),
-            'cpm' => $this->faker->randomFloat(2, 0.01, 3),
+            'cpm' => $this->faker->randomFloat(2, 0.01, 10),
             'views_limit' => $this->faker->randomNumber(),
         ];
     }

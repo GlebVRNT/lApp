@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('target_url');
             $table->string('img_url');
-            $table->unsignedFloat('cpm');
-            $table->unsignedBigInteger('views_limit');
+            $table->unsignedDecimal('cpm');
+            $table->unsignedInteger('views_limit');
             $table->timestamps();
         });
     }
